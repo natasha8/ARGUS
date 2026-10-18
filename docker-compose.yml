@@ -1,0 +1,52 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: scanner
+      POSTGRES_PASSWORD: scanner
+      POSTGRES_DB: scanner
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U scanner -d scanner"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  collaborator:
+    build: ./targets/collaborator
+    ports:
+      - "127.0.0.1:8090:8090"
+
+  vulnerable-api:
+    build: ./targets/vulnerable-api
+    ports:
+      - "127.0.0.1:8001:8000"
+    depends_on:
+      - collaborator
+
+  backend:
+    build: ./backend
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      DATABASE_URL: postgresql+psycopg://scanner:scanner@db:5432/scanner
+      ALLOWED_TARGET_HOSTS: localhost,127.0.0.1,vulnerable-api,host.docker.internal
+      COLLABORATOR_BASE_URL: http://collaborator:8090
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
