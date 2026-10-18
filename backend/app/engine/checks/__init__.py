@@ -1,8 +1,10 @@
+from app.engine.checks.auth_jwt import AuthJwtCheck
 from app.engine.checks.base import allows_active_probe
 from app.engine.checks.bola import BolaCheck
 
 CHECK_TYPES = {
     "bola": BolaCheck,
+    "auth_jwt": AuthJwtCheck,
 }
 
 
