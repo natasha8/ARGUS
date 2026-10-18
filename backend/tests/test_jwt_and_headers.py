@@ -1,3 +1,4 @@
+from app.engine.checks.injection import is_time_delayed
 from app.engine.http import auth_headers
 from app.engine.jwtutil import forge_none, matching_secret, sign_hs256
 from app.engine.types import Profile
@@ -20,3 +21,8 @@ def test_auth_headers():
     )
     assert api_key["X-API-Key"] == "lab-key"
     assert auth_headers(None) == {}
+
+
+def test_time_delay_threshold():
+    assert is_time_delayed(120, 1100) is True
+    assert is_time_delayed(120, 400) is False
