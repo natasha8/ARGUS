@@ -2,11 +2,13 @@ from app.engine.checks.auth_jwt import AuthJwtCheck
 from app.engine.checks.base import allows_active_probe
 from app.engine.checks.bfla import BflaCheck
 from app.engine.checks.bola import BolaCheck
+from app.engine.checks.ssrf import SsrfCheck
 
 CHECK_TYPES = {
     "bola": BolaCheck,
     "auth_jwt": AuthJwtCheck,
     "bfla": BflaCheck,
+    "ssrf": SsrfCheck,
 }
 
 

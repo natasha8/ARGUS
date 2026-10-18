@@ -22,6 +22,12 @@ CHECK_CATALOG = [
         "owasp": "API5:2023",
         "summary": "Checks whether administrative functions accept a low-privilege role.",
     },
+    {
+        "id": "ssrf",
+        "title": "SSRF",
+        "owasp": "API7:2023",
+        "summary": "Checks whether a URL parameter makes the server call a lab callback.",
+    },
 ]
 
 ALLOWED_CHECKS = {item["id"] for item in CHECK_CATALOG}
