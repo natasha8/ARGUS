@@ -41,6 +41,12 @@ CHECK_CATALOG = [
         "summary": "Looks for SQL injection, NoSQL operators, and command-like parameters, using non-destructive probes.",
     },
     {
+        "id": "misconfig",
+        "title": "Security misconfiguration",
+        "owasp": "API8:2023",
+        "summary": "Checks CORS origin reflection, missing security headers, and verbose error disclosure.",
+    },
+    {
         "id": "mass_assignment",
         "title": "Mass assignment (opt-in)",
         "owasp": "API3:2023",

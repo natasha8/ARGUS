@@ -5,6 +5,7 @@ from app.engine.checks.bola import BolaCheck
 from app.engine.checks.data_exposure import DataExposureCheck
 from app.engine.checks.injection import InjectionCheck
 from app.engine.checks.mass_assignment import MassAssignmentCheck
+from app.engine.checks.misconfig import MisconfigCheck
 from app.engine.checks.ssrf import SsrfCheck
 
 CHECK_TYPES = {
@@ -13,6 +14,7 @@ CHECK_TYPES = {
     "data_exposure": DataExposureCheck,
     "bfla": BflaCheck,
     "ssrf": SsrfCheck,
+    "misconfig": MisconfigCheck,
     "injection": InjectionCheck,
     "mass_assignment": MassAssignmentCheck,
 }
