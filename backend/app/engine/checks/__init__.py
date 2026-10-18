@@ -1,6 +1,8 @@
 from app.engine.checks.base import allows_active_probe
+from app.engine.checks.bola import BolaCheck
 
 CHECK_TYPES = {
+    "bola": BolaCheck,
 }
 
 
