@@ -16,6 +16,12 @@ CHECK_CATALOG = [
         "owasp": "API2:2023",
         "summary": "Checks weak secrets, unsigned tokens, ignored expiry, and forged role claims.",
     },
+    {
+        "id": "bfla",
+        "title": "BFLA",
+        "owasp": "API5:2023",
+        "summary": "Checks whether administrative functions accept a low-privilege role.",
+    },
 ]
 
 ALLOWED_CHECKS = {item["id"] for item in CHECK_CATALOG}
