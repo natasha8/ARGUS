@@ -78,7 +78,7 @@ class ResourceLimitsCheck:
                     f"Parameter {name} on {endpoint.label} returned {PROBE_LIMIT} items, "
                     "the same number that was requested. The server did not apply a smaller ceiling."
                 ),
-                owasp_id="API4:2023",
+                owasp_id="API4:2023", owasp_web="A10:2025",
                 remediation=REMEDIATION_PAGE,
                 endpoint_key=endpoint.label,
                 evidence={
@@ -105,7 +105,7 @@ class ResourceLimitsCheck:
                 "A successful response did not include Retry-After or X-RateLimit-* headers. "
                 "That is a signal, not proof that requests are unlimited."
             ),
-            owasp_id="API4:2023",
+            owasp_id="API4:2023", owasp_web="A10:2025",
             remediation=REMEDIATION_RATE,
             evidence={
                 "subtype": "rate_headers",

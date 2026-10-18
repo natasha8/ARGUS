@@ -108,6 +108,7 @@ export default function ScanDetailPage() {
           <option value="business_flow">Business flow</option>
           <option value="ssrf">SSRF</option>
           <option value="injection">Injection</option>
+          <option value="fail_open">Fail-open</option>
           <option value="misconfig">Misconfiguration</option>
           <option value="inventory">Inventory</option>
           <option value="unsafe_consumption">Unsafe consumption</option>
@@ -161,6 +162,7 @@ function FindingCard({ finding }: { finding: Finding }) {
       </div>
       <div className="muted">
         {finding.owasp_id}
+        {finding.owasp_web && finding.owasp_web !== finding.owasp_id ? ` · ${finding.owasp_web}` : ""}
         {finding.endpoint_label ? ` · ${finding.endpoint_label}` : ""}
       </div>
       <p>{finding.description}</p>

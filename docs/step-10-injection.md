@@ -4,7 +4,7 @@
 
 Recognize input that changes a query or is treated as a command, without destructive probes.
 
-Reference: OWASP Top 10 A03:2021. The API Security Top 10 2023 does not have a separate item named "injection"; the issue is still real in APIs that concatenate SQL or pass input to a shell. Code: `backend/app/engine/checks/injection.py`.
+Reference: OWASP Top 10 A05:2025 (this was A03:2021). The API Security Top 10 2023 does not have a separate item named "injection"; the issue is still real in APIs that concatenate SQL or pass input to a shell. Code: `backend/app/engine/checks/injection.py`. Findings use `owasp_id` and `owasp_web` `A05:2025`.
 
 ## Where probes run
 

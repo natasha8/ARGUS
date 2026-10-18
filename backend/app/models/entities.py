@@ -77,6 +77,7 @@ class Finding(Base):
     title: Mapped[str] = mapped_column(String(300))
     description: Mapped[str] = mapped_column(Text)
     owasp_id: Mapped[str] = mapped_column(String(40))
+    owasp_web: Mapped[str | None] = mapped_column(String(16), nullable=True)
     remediation: Mapped[str] = mapped_column(Text)
     evidence: Mapped[dict] = mapped_column(JSON, default=dict)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)

@@ -19,5 +19,6 @@ Each step describes one part of Argus: what is there, why it exists, and how to 
 15. [Security misconfiguration (API8)](step-15-misconfig.md)
 16. [Dashboard inputs and security schemes](step-16-inputs.md)
 17. [API4, API6, API9, and API10](step-17-owasp-rest.md)
+18. [OWASP Top 10:2025](step-18-owasp-2025.md)
 
 The usage guide is [GUIDE.md](../GUIDE.md). The learning path is in [learn](../learn/00-OVERVIEW.md).

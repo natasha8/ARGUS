@@ -4,19 +4,24 @@ Security scanner for REST APIs you are authorized to test. It compares responses
 
 This version covers:
 
-| Check | Reference |
-| --- | --- |
-| BOLA / IDOR | OWASP API1:2023 |
-| Weak JWT, `alg: none`, ignored expiry, forged role claim | OWASP API2:2023 |
-| Excessive data exposure | OWASP API3:2023 |
-| Uncapped page size, missing rate-limit headers | OWASP API4:2023 |
-| BFLA | OWASP API5:2023 |
-| Sensitive business flow, opt-in | OWASP API6:2023 |
-| SSRF to a lab callback | OWASP API7:2023 |
-| Security misconfiguration (CORS, headers, verbose errors) | OWASP API8:2023 |
-| Previous API version still reachable | OWASP API9:2023 |
-| Upstream response copied into the result | OWASP API10:2023 |
-| SQL, NoSQL operators, command metacharacters | OWASP A03:2021 |
+| Check | API Security 2023 | Top 10:2025 |
+| --- | --- | --- |
+| BOLA / IDOR | API1 | A01 Broken Access Control |
+| Weak JWT, `alg: none`, ignored expiry, forged role claim | API2 | A07 Authentication Failures |
+| Excessive data exposure, including a fast password hash | API3 | A04 Cryptographic Failures |
+| Uncapped page size, missing rate-limit headers | API4 | A10 Mishandling of Exceptional Conditions |
+| BFLA | API5 | A01 Broken Access Control |
+| Sensitive business flow, opt-in | API6 | A06 Insecure Design |
+| SSRF to a lab callback | API7 | A01 Broken Access Control |
+| Security misconfiguration (CORS, headers) | API8 | A02 Security Misconfiguration |
+| Verbose errors | API8 | A10 Mishandling of Exceptional Conditions |
+| Previous API version still reachable | API9 | A02 Security Misconfiguration |
+| Upstream response copied into the result | API10 | A08 Software or Data Integrity Failures |
+| Mass assignment, opt-in | API3 | A08 Software or Data Integrity Failures |
+| SQL, NoSQL operators, command metacharacters | — | A05 Injection |
+| Required query parameter ignored | — | A10 Mishandling of Exceptional Conditions |
+
+A03:2025 Software Supply Chain Failures and A09:2025 Security Logging and Alerting Failures are not probed. Supply-chain compromises and server logs are not visible on the API, and Argus does not guess dependency files or try component exploits.
 
 API6 and mass assignment stay off unless you select them, because those probes change server state. The [guide](GUIDE.md) explains what each check confirms.
 

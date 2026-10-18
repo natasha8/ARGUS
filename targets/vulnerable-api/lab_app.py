@@ -411,6 +411,46 @@ async def quotes_safe(provider: str) -> dict:
     return {"ok": True}
 
 
+_REPORT = {"format": "json", "rows": [{"sku": "notebook", "total": 1}]}
+
+
+@app.get("/api/reports/export")
+def export_report(format: str | None = None) -> dict:
+    # Vulnerability: the specification marks format as required, but a missing value still returns the report.
+    del format
+    return dict(_REPORT)
+
+
+@app.get("/api/reports/export/safe")
+def export_report_safe(format: str) -> dict:
+    if format not in {"json", "csv"}:
+        raise HTTPException(status_code=400, detail="format required")
+    return {"format": format, "rows": [{"sku": "notebook", "total": 1}]}
+
+
+def _openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    from fastapi.openapi.utils import get_openapi
+
+    schema = get_openapi(
+        title=app.title,
+        version=app.version,
+        description=app.description,
+        routes=app.routes,
+    )
+    operation = (schema.get("paths") or {}).get("/api/reports/export", {}).get("get")
+    if operation:
+        for param in operation.get("parameters") or []:
+            if param.get("name") == "format":
+                param["required"] = True
+    app.openapi_schema = schema
+    return schema
+
+
+app.openapi = _openapi
+
+
 @app.post("/api/checkout")
 def checkout(body: CheckoutBody) -> dict:
     # Vulnerability: the same purchase is created again. The idempotency key is ignored.

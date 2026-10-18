@@ -111,7 +111,7 @@ class MisconfigCheck:
                     "The server echoes an attacker-supplied Origin in Access-Control-Allow-Origin and allows "
                     "credentials. Any site can read authenticated responses on behalf of a logged-in user."
                 ),
-                owasp_id="API8:2023",
+                owasp_id="API8:2023", owasp_web="A02:2025",
                 remediation=REMEDIATION_CORS,
                 evidence={
                     "subtype": "cors",
@@ -129,7 +129,7 @@ class MisconfigCheck:
                 "The server reflects the request Origin or returns a wildcard Access-Control-Allow-Origin. "
                 "Without credentials the impact is lower, but it still relaxes the same-origin policy."
             ),
-            owasp_id="API8:2023",
+            owasp_id="API8:2023", owasp_web="A02:2025",
             remediation=REMEDIATION_CORS,
             evidence={
                 "subtype": "cors",
@@ -159,7 +159,7 @@ class MisconfigCheck:
                 f"The response from {label} does not set: {', '.join(missing)}. These headers harden clients "
                 "against sniffing, framing, and injection."
             ),
-            owasp_id="API8:2023",
+            owasp_id="API8:2023", owasp_web="A02:2025",
             remediation=REMEDIATION_HEADERS,
             evidence={
                 "subtype": "headers",
@@ -187,7 +187,7 @@ class MisconfigCheck:
                     "A request to a non-existent path returned a stack trace or debug page. "
                     "Error output exposes framework internals and file paths."
                 ),
-                owasp_id="API8:2023",
+                owasp_id="API8:2023", owasp_web="A10:2025",
                 remediation=REMEDIATION_ERRORS,
                 evidence={
                     "subtype": "verbose_error",
@@ -204,7 +204,7 @@ class MisconfigCheck:
                 "A request to a non-existent path returned a 5xx instead of a clean 404. "
                 "Check that error handling does not leak details."
             ),
-            owasp_id="API8:2023",
+            owasp_id="API8:2023", owasp_web="A10:2025",
             remediation=REMEDIATION_ERRORS,
             evidence={
                 "subtype": "verbose_error",

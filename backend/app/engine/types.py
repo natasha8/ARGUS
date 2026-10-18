@@ -58,6 +58,7 @@ class FindingDraft:
     title: str
     description: str
     owasp_id: str
+    owasp_web: str
     remediation: str
     evidence: dict[str, Any]
     endpoint_key: str | None = None

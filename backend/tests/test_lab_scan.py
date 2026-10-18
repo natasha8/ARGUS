@@ -57,6 +57,7 @@ def test_lab_scan_confirms_real_issues_and_skips_safe_routes(lab_servers):
             "inventory",
             "unsafe_consumption",
             "injection",
+            "fail_open",
         ],
         concurrency=8,
         rate_limit_rps=40,
@@ -88,6 +89,9 @@ def test_lab_scan_confirms_real_issues_and_skips_safe_routes(lab_servers):
 
     assert has("bola", status="confirmed", endpoint="GET /api/orders/{order_id}")
     assert not has("bola", endpoint="GET /api/orders/{order_id}/secure")
+    bola = next(item for item in findings if item.category == "bola" and item.status == "confirmed")
+    assert bola.owasp_id == "API1:2023"
+    assert bola.owasp_web == "A01:2025"
 
     jwt = [item for item in findings if item.category == "auth_jwt"]
     assert any("weak secret" in item.title for item in jwt)
@@ -101,7 +105,11 @@ def test_lab_scan_confirms_real_issues_and_skips_safe_routes(lab_servers):
     assert not has("data_exposure", endpoint="GET /api/secure/profile")
     exposure = next(item for item in findings if item.category == "data_exposure")
     assert "password_hash" in exposure.evidence["exposed_fields"]
-    assert "lab-reset" not in (exposure.evidence["requests"][0]["body_excerpt"])
+    assert exposure.owasp_web == "A04:2025"
+    assert {"field": "password_hash", "algorithm": "sha256"} in exposure.evidence["fast_hashes"]
+    excerpt = exposure.evidence["requests"][0]["body_excerpt"]
+    assert "lab-reset" not in excerpt
+    assert "[redacted]" in excerpt
 
     jwt_titles = [item.title for item in jwt]
     assert any("role claim can be forged" in title for title in jwt_titles)
@@ -120,6 +128,14 @@ def test_lab_scan_confirms_real_issues_and_skips_safe_routes(lab_servers):
     assert not has("injection", endpoint="GET /api/products/search-safe")
     assert has("injection", status="confirmed", endpoint="POST /api/items/find", subtype="nosql")
     assert has("injection", status="confirmed", endpoint="GET /api/diag/ping", subtype="command")
+    sql = next(item for item in findings if item.category == "injection" and (item.evidence or {}).get("subtype") == "sql")
+    assert sql.owasp_id == "A05:2025"
+    assert sql.owasp_web == "A05:2025"
+
+    assert has("fail_open", status="confirmed", endpoint="GET /api/reports/export")
+    assert not has("fail_open", endpoint="GET /api/reports/export/safe")
+    fail_open = next(item for item in findings if item.category == "fail_open")
+    assert fail_open.owasp_web == "A10:2025"
 
     misconfig = [item for item in findings if item.category == "misconfig"]
     cors = next(item for item in misconfig if (item.evidence or {}).get("subtype") == "cors")

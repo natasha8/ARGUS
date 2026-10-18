@@ -63,7 +63,7 @@ class UnsafeConsumptionCheck:
                 f"Parameter {name} on {endpoint.label} makes the server call the supplied URL "
                 "and copy the upstream marker into its own response."
             ),
-            owasp_id="API10:2023",
+            owasp_id="API10:2023", owasp_web="A08:2025",
             remediation=REMEDIATION,
             endpoint_key=endpoint.label,
             evidence={

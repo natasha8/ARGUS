@@ -40,7 +40,7 @@ def scan_command(
     manual: Optional[Path] = typer.Option(None, help="JSON file with manual endpoints."),
     profiles: Optional[Path] = typer.Option(None, help="JSON file with authentication profiles."),
     checks: str = typer.Option(
-        "bola,auth_jwt,data_exposure,resource_limits,bfla,ssrf,misconfig,inventory,unsafe_consumption,injection"
+        "bola,auth_jwt,data_exposure,resource_limits,bfla,ssrf,misconfig,inventory,unsafe_consumption,injection,fail_open"
     ),
     collaborator: Optional[str] = typer.Option(None, help="Base URL of the lab callback."),
     rate_limit: float = typer.Option(5),

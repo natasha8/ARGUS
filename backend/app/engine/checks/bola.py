@@ -70,7 +70,7 @@ class BolaCheck:
                             f"owned by {other.name}. The anonymous request is rejected, so the resource "
                             "is not public: the ownership check is missing."
                         ),
-                        owasp_id="API1:2023",
+                        owasp_id="API1:2023", owasp_web="A01:2025",
                         remediation=REMEDIATION,
                         endpoint_key=endpoint.label,
                         evidence={
@@ -97,7 +97,7 @@ class BolaCheck:
                                 f"Two authenticated profiles receive the same response from {filled}, "
                                 "while the anonymous request is rejected. There is no owner field to confirm the object."
                             ),
-                            owasp_id="API1:2023",
+                            owasp_id="API1:2023", owasp_web="A01:2025",
                             remediation=REMEDIATION,
                             endpoint_key=endpoint.label,
                             evidence={

@@ -56,6 +56,7 @@ class ScanCreate(BaseModel):
             "inventory",
             "unsafe_consumption",
             "injection",
+            "fail_open",
         ]
     )
     concurrency: int = 4
@@ -82,6 +83,7 @@ class FindingRead(BaseModel):
     title: str
     description: str
     owasp_id: str
+    owasp_web: str | None = None
     endpoint_label: str | None
     remediation: str
     evidence: dict[str, Any]

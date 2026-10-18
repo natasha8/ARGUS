@@ -141,6 +141,7 @@ async def execute_scan(db: Session, scan_id: str) -> None:
                     title=draft.title,
                     description=draft.description,
                     owasp_id=draft.owasp_id,
+                    owasp_web=draft.owasp_web,
                     remediation=draft.remediation,
                     evidence=draft.evidence,
                 )

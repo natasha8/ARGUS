@@ -119,7 +119,7 @@ class MassAssignmentCheck:
                     f"Sending {key} in the body of {endpoint.label} as profile {profile.name} changed the stored "
                     f"value, confirmed by re-reading {get_endpoint.label}. The client can set a property it should not control."
                 ),
-                owasp_id="API3:2023",
+                owasp_id="API3:2023", owasp_web="A08:2025",
                 remediation=REMEDIATION,
                 endpoint_key=endpoint.label,
                 evidence={

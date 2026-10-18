@@ -71,7 +71,7 @@ class SsrfCheck:
                 f"Parameter {name} on {endpoint.label} makes the server send an HTTP request "
                 "to the supplied URL. The lab callback received the call."
             ),
-            owasp_id="API7:2023",
+            owasp_id="API7:2023", owasp_web="A01:2025",
             remediation=REMEDIATION,
             endpoint_key=endpoint.label,
             evidence={

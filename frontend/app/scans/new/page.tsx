@@ -15,6 +15,7 @@ const ALL_CHECKS = [
   "inventory",
   "unsafe_consumption",
   "injection",
+  "fail_open",
 ];
 const METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"];
 

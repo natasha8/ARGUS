@@ -8,6 +8,7 @@ export type Finding = {
   title: string;
   description: string;
   owasp_id: string;
+  owasp_web?: string | null;
   endpoint_label: string | null;
   remediation: string;
   evidence: {

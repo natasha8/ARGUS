@@ -64,7 +64,7 @@ class InventoryCheck:
                 f"{label} is not in the specification, but it responds successfully. "
                 f"It was derived from {endpoint.label} by stepping the version number down by one."
             ),
-            owasp_id="API9:2023",
+            owasp_id="API9:2023", owasp_web="A02:2025",
             remediation=REMEDIATION,
             endpoint_key=label,
             evidence={

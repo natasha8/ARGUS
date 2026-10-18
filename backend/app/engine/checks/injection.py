@@ -143,7 +143,7 @@ class InjectionCheck:
                             f"Sending an operator object instead of a string makes {endpoint.label} "
                             "change its result. The API is interpreting the JSON structure."
                         ),
-                        owasp_id="A03:2021",
+                        owasp_id="A05:2025", owasp_web="A05:2025",
                         remediation=REMEDIATION["nosql"],
                         endpoint_key=endpoint.label,
                         evidence={
@@ -190,7 +190,7 @@ class InjectionCheck:
                         "while a plain value does not. The check does not run extra commands: "
                         "it only compares how metacharacters are handled."
                     ),
-                    owasp_id="A03:2021",
+                    owasp_id="A05:2025", owasp_web="A05:2025",
                     remediation=REMEDIATION["command"],
                     endpoint_key=endpoint.label,
                     evidence={
@@ -228,7 +228,7 @@ class InjectionCheck:
                 f"Parameter {name} on {endpoint.label} changes the query or produces a SQL error. "
                 "The probes are boolean and error comparisons, with no stacked queries and no writes."
             ),
-            owasp_id="A03:2021",
+            owasp_id="A05:2025", owasp_web="A05:2025",
             remediation=REMEDIATION["sql"],
             endpoint_key=endpoint.label,
             evidence={"subtype": subtype, "notes": f"Result: {status}.", "requests": requests},

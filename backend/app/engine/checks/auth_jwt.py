@@ -40,7 +40,7 @@ class AuthJwtCheck:
                         "The token's HMAC signature matches a very common secret. "
                         "Anyone who guesses it can mint arbitrary tokens."
                     ),
-                    owasp_id="API2:2023",
+                    owasp_id="API2:2023", owasp_web="A07:2025",
                     remediation=REMEDIATION,
                     evidence={
                         "notes": "The secret was compared locally with a short list of obvious values. It is not printed in the report.",
@@ -98,7 +98,7 @@ class AuthJwtCheck:
                         "Some endpoints accept a token with algorithm none and an empty signature. "
                         "The API is not verifying the signature."
                     ),
-                    owasp_id="API2:2023",
+                    owasp_id="API2:2023", owasp_web="A07:2025",
                     remediation=REMEDIATION,
                     evidence={
                         "notes": "Confirmed only where the real token returns 2xx and the anonymous request returns 401 or 403.",
@@ -118,7 +118,7 @@ class AuthJwtCheck:
                         "A token whose exp is in the past, re-signed with the weak secret already identified, "
                         "is still accepted."
                     ),
-                    owasp_id="API2:2023",
+                    owasp_id="API2:2023", owasp_web="A07:2025",
                     remediation=REMEDIATION,
                     evidence={
                         "notes": "Expiry is not enforced on the listed endpoints.",
@@ -180,7 +180,7 @@ class AuthJwtCheck:
                 f"Re-signing the token of profile {low.name} with role admin, using the weak secret "
                 "already identified, opens endpoints that reject the real token."
             ),
-            owasp_id="API2:2023",
+            owasp_id="API2:2023", owasp_web="A07:2025",
             remediation=REMEDIATION,
             evidence={
                 "notes": "Confirmed only where the real low-privilege token gets 401 or 403 and the forged one gets 2xx.",

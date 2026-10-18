@@ -31,7 +31,9 @@ def render_markdown(scan: Scan, findings: list[Finding]) -> str:
     for finding in report["findings"]:
         lines.append(f"### [{finding['severity'].upper()}] [{finding['status']}] {finding['title']}")
         lines.append("")
-        lines.append(f"- Category: `{finding['category']}` · {finding['owasp_id']}")
+        web = finding.get("owasp_web")
+        reference = finding["owasp_id"] if not web or web == finding["owasp_id"] else f"{finding['owasp_id']} · {web}"
+        lines.append(f"- Category: `{finding['category']}` · {reference}")
         if finding["endpoint"]:
             lines.append(f"- Endpoint: `{finding['endpoint']}`")
         lines.append("")

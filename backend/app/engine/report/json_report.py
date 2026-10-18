@@ -41,6 +41,7 @@ def build_json_report(scan: Scan, findings: list[Finding]) -> dict:
                 "title": finding.title,
                 "description": finding.description,
                 "owasp_id": finding.owasp_id,
+                "owasp_web": finding.owasp_web,
                 "endpoint": finding.endpoint_label,
                 "remediation": finding.remediation,
                 "evidence": finding.evidence,

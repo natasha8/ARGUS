@@ -45,7 +45,7 @@ class BflaCheck:
                             f"Profile {low.name} (role {low.role}) receives HTTP {low_resp.status} "
                             f"from {endpoint.label}. The anonymous request is rejected."
                         ),
-                        owasp_id="API5:2023",
+                        owasp_id="API5:2023", owasp_web="A01:2025",
                         remediation=REMEDIATION,
                         endpoint_key=endpoint.label,
                         evidence={
@@ -65,7 +65,7 @@ class BflaCheck:
                         status="confirmed",
                         title="Admin function reachable without authentication",
                         description=f"{endpoint.label} succeeds even without credentials.",
-                        owasp_id="API5:2023",
+                        owasp_id="API5:2023", owasp_web="A01:2025",
                         remediation=REMEDIATION,
                         endpoint_key=endpoint.label,
                         evidence={

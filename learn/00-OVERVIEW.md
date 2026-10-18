@@ -13,7 +13,7 @@ Before reading the code, start the lab as in the [README](../README.md) and run 
 
 ## What it is not
 
-It is not permission to scan other people's APIs. The allowlist and the scope confirmation are part of the program. It automates the OWASP API Security Top 10 2023 (API1 through API10) plus injection (A03 of the web Top 10). API6 and the write side of API3 stay off unless you select them, because those probes change state.
+It is not permission to scan other people's APIs. The allowlist and the scope confirmation are part of the program. It automates the OWASP API Security Top 10 2023 (API1 through API10) and labels each finding with the matching OWASP Top 10:2025 category. Injection is A05:2025. A required query parameter that can be omitted is A10:2025. A03:2025 (software supply chain) and A09:2025 (logging and alerting) are not probed. API6 and the write side of API3 stay off unless you select them, because those probes change state.
 
 ## Reading order
 

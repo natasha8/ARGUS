@@ -36,7 +36,7 @@ The callback must be reachable both from Argus and from the API under test. Argu
 
 ## How to read a finding
 
-Each card shows severity, status, OWASP category, endpoint, description, remediation, and request excerpts. `Authorization` headers are not stored in the evidence. If a JWT secret is guessed, it is not written in the report: only the fact that it belonged to a short list of obvious values.
+Each card shows severity, status, the API Security Top 10 id, the OWASP Top 10:2025 id when it differs, endpoint, description, remediation, and request excerpts. `Authorization` headers are not stored in the evidence. If a JWT secret is guessed, it is not written in the report: only the fact that it belonged to a short list of obvious values.
 
 ## Checks
 
@@ -65,6 +65,8 @@ Once the secret is recovered, Argus also re-signs a non-admin token with `role: 
 For every `GET`, Argus reads the response as an authenticated profile and looks for property names that should never reach a client, such as `password_hash`, `secret`, `private_key`, or `reset_token`. These are confirmed. Weaker names such as `token` or `api_key` are only potential, because they are sometimes legitimate. The report lists field names only; values are redacted.
 
 `GET /api/profile` in the lab exposes a password hash and a reset token. `GET /api/secure/profile` returns only public fields and must not appear.
+
+When a confirmed field named like a password hash is an unsalted MD5 (32 hex digits), SHA-1 (40), or SHA-256 (64) digest, and the same object has no salt, the evidence names the algorithm in `fast_hashes`. The digest is not copied into the report. A sibling salt field suppresses that classification. The finding still uses API3:2023 and A04:2025.
 
 Mass assignment, the write side of API3, is an **opt-in** check (`mass_assignment`), off by default because it sends a state-changing request. When enabled, it only flips a privileged property it can already read back on a `PATCH`/`PUT` endpoint with a matching `GET`, then restores the original value. In the lab, `PATCH /api/profile` lets a normal user set `role: admin`; the probe confirms it and restores `role: user`.
 
@@ -108,13 +110,32 @@ Only a query parameter named `provider`. The value is the collaborator URL `/tru
 
 `GET /api/quotes` in the lab copies the upstream body. `GET /api/quotes/safe` performs the request and returns only `{"ok": true}`, so it must not appear.
 
-### Injection, A03:2021
+### Injection, A05:2025
 
 Three subtypes, distinguished by `evidence.subtype`:
 
 - **sql**: a quote that produces a SQL error and, as confirmation, two boolean conditions that change the number of results. The probe does not use `UNION` or write commands. If the error indicates MySQL, a single `SLEEP(1)` can confirm the delay. On the SQLite lab, the boolean comparison is enough. `GET /api/products/search-safe` is parameterized and must not appear.
 - **nosql**: a JSON string field is replaced with `{"$gt": ""}`. It is confirmed if the result list grows, or if a `401` becomes success. In the lab, `POST /api/items/find` applies the operator with a small local interpreter: that is the behavior to recognize, not a MongoDB server.
 - **command**: only parameters named `host`, `hostname`, `ip`, `domain`, `cmd`, or `command`. It compares `127.0.0.1` with a quote. In the lab, `GET /api/diag/ping` **does not start a shell**: it returns a shell-style error when it sees a metacharacter, so the check can be demonstrated without running commands.
+
+### Fail-open, A10:2025
+
+This check is on by default and it is read-only. It only looks at `GET` endpoints whose specification marks a query parameter as required. Argus sends that request once with a placeholder (`json` for a string, `1` for a number), then again with the parameter omitted.
+
+It is confirmed when both responses are successful and the body is the same. If the omitted call still succeeds but the body changes, the finding stays potential. A 4xx is ignored. Paths that still contain `{parameters}` are not requested.
+
+In the lab, `GET /api/reports/export` documents `format` as required and returns the report anyway. `GET /api/reports/export/safe` returns 422 when `format` is missing and must not appear.
+
+### What the 2025 list does not add here
+
+Argus keeps the API Security Top 10 probes and labels each finding with the matching [OWASP Top 10:2025](https://owasp.org/Top10/2025/) category. The mapping is in [step 18](docs/step-18-owasp-2025.md).
+
+Two categories are named and not tested:
+
+- **A03:2025 Software Supply Chain Failures.** Argus does not guess dependency files, query vulnerability databases, or send component-exploit probes.
+- **A09:2025 Security Logging and Alerting Failures.** Server logs are not on the API. There is no login spraying and no comparison of audit logs.
+
+A clean scan does not cover those two.
 
 ## The lab
 

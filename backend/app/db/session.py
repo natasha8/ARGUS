@@ -30,20 +30,28 @@ def ensure_schema(bind: Engine | None = None) -> None:
     """Create tables, then add columns introduced after the first release.
 
     `create_all` does not alter an existing table. Local databases created
-    before security schemes were stored gain that column here.
+    before later columns were stored gain those columns here.
     """
     from app.models import Base
 
     target = bind or engine
     Base.metadata.create_all(bind=target)
     inspector = inspect(target)
-    if "endpoints" not in inspector.get_table_names():
-        return
-    columns = {column["name"] for column in inspector.get_columns("endpoints")}
-    if "security" in columns:
+    tables = set(inspector.get_table_names())
+    statements: list[str] = []
+    if "endpoints" in tables:
+        columns = {column["name"] for column in inspector.get_columns("endpoints")}
+        if "security" not in columns:
+            statements.append("ALTER TABLE endpoints ADD COLUMN security JSON")
+    if "findings" in tables:
+        columns = {column["name"] for column in inspector.get_columns("findings")}
+        if "owasp_web" not in columns:
+            statements.append("ALTER TABLE findings ADD COLUMN owasp_web VARCHAR(16)")
+    if not statements:
         return
     with target.begin() as connection:
-        connection.execute(text("ALTER TABLE endpoints ADD COLUMN security JSON"))
+        for statement in statements:
+            connection.execute(text(statement))
 
 
 def get_db() -> Iterator[Session]:

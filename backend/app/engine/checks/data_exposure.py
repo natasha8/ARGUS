@@ -6,6 +6,7 @@ off unless that check is selected, because it changes server state and then rest
 """
 
 import json
+import re
 
 from app.engine.checks.base import concrete_paths, user_profiles
 from app.engine.http import excerpt
@@ -40,6 +41,10 @@ SENSITIVE_KEYS = {
 }
 # Weaker indicators: often legitimate (login responses), so only flagged as potential.
 WEAK_KEYS = {"token", "api_key", "apikey", "access_key", "refresh_token"}
+HASH_FIELDS = {"password", "password_hash", "passwordhash", "pwd_hash"}
+SALT_KEYS = {"salt", "password_salt", "pwd_salt", "hash_salt"}
+FAST_HASH = {32: "md5", 40: "sha1", 64: "sha256"}
+HEX_DIGEST = re.compile(r"[0-9a-fA-F]+\Z")
 
 
 def _sensitive_hits(data, keys: set[str], depth: int = 0) -> list[str]:
@@ -55,6 +60,33 @@ def _sensitive_hits(data, keys: set[str], depth: int = 0) -> list[str]:
     elif isinstance(data, list):
         for item in data:
             found.extend(_sensitive_hits(item, keys, depth + 1))
+    return found
+
+
+def _fast_hashes(data, depth: int = 0) -> list[dict[str, str]]:
+    """Name unsalted MD5, SHA-1, and SHA-256 digests. The digest itself is not returned."""
+    if depth > 5 or not isinstance(data, (dict, list)):
+        return []
+    found: list[dict[str, str]] = []
+    if isinstance(data, dict):
+        salted = any(
+            isinstance(key, str) and key.lower() in SALT_KEYS and value not in (None, "")
+            for key, value in data.items()
+        )
+        for key, value in data.items():
+            if (
+                isinstance(key, str)
+                and key.lower() in HASH_FIELDS
+                and isinstance(value, str)
+                and not salted
+                and HEX_DIGEST.fullmatch(value)
+                and len(value) in FAST_HASH
+            ):
+                found.append({"field": key, "algorithm": FAST_HASH[len(value)]})
+            found.extend(_fast_hashes(value, depth + 1))
+    else:
+        for item in data:
+            found.extend(_fast_hashes(item, depth + 1))
     return found
 
 
@@ -104,9 +136,27 @@ class DataExposureCheck:
     def _finding(self, endpoint, response, keys: list[str], status: str, severity: str) -> FindingDraft:
         label = "Sensitive properties exposed" if status == "confirmed" else "Possibly sensitive properties exposed"
         joined = ", ".join(keys)
+        fast = _fast_hashes(response.json_body) if status == "confirmed" else []
         request = excerpt(response, "authenticated read")
         redacted = _redact(response.json_body, SENSITIVE_KEYS | WEAK_KEYS)
         request["body_excerpt"] = json.dumps(redacted, ensure_ascii=False)[:1200]
+        hash_note = ""
+        if fast:
+            described = ", ".join(f"{item['field']} ({item['algorithm']})" for item in fast)
+            hash_note = f" {described} matches an unsalted fast digest. The digest is not stored."
+        notes = (
+            "Values are not copied into the report. Only the field names are listed." + hash_note
+            if status == "confirmed"
+            else "These field names are sometimes legitimate; review the response by hand."
+        )
+        evidence: dict = {
+            "subtype": "excessive_data_exposure",
+            "exposed_fields": keys,
+            "notes": notes,
+            "requests": [request],
+        }
+        if fast:
+            evidence["fast_hashes"] = fast
         return FindingDraft(
             category="data_exposure",
             severity=severity,
@@ -117,16 +167,8 @@ class DataExposureCheck:
                 "should not receive. The API appears to serialize the whole object instead of an allowlist."
             ),
             owasp_id="API3:2023",
+            owasp_web="A04:2025",
             remediation=REMEDIATION,
             endpoint_key=endpoint.label,
-            evidence={
-                "subtype": "excessive_data_exposure",
-                "exposed_fields": keys,
-                "notes": (
-                    "Values are not copied into the report. Only the field names are listed."
-                    if status == "confirmed"
-                    else "These field names are sometimes legitimate; review the response by hand."
-                ),
-                "requests": [request],
-            },
+            evidence=evidence,
         )

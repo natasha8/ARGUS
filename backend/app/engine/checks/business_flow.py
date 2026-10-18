@@ -83,7 +83,7 @@ class BusinessFlowCheck:
             description=(
                 f"{endpoint.label} accepted two identical requests that carried the same Idempotency-Key."
             ),
-            owasp_id="API6:2023",
+            owasp_id="API6:2023", owasp_web="A06:2025",
             remediation=REMEDIATION,
             endpoint_key=endpoint.label,
             evidence={
