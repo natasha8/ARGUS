@@ -1,0 +1,26 @@
+[
+  {
+    "name": "alice",
+    "role": "user",
+    "type": "bearer",
+    "username": "alice",
+    "password": "alice123",
+    "login_path": "/api/login"
+  },
+  {
+    "name": "bob",
+    "role": "user",
+    "type": "bearer",
+    "username": "bob",
+    "password": "bob123",
+    "login_path": "/api/login"
+  },
+  {
+    "name": "admin",
+    "role": "admin",
+    "type": "bearer",
+    "username": "admin",
+    "password": "admin123",
+    "login_path": "/api/login"
+  }
+]

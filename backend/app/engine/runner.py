@@ -9,11 +9,12 @@ from sqlalchemy.orm import Session
 from sqlalchemy.orm.attributes import flag_modified
 
 from app.config import settings
+from app.engine.auth.profiles import resolve_profiles
 from app.engine.checks import build_checks
 from app.engine.discovery import parse_manual, parse_spec
 from app.engine.http import ProbeClient
 from app.engine.safeguards import assert_url_allowed
-from app.engine.types import EndpointSpec, FindingDraft, ScanContext
+from app.engine.types import EndpointSpec, FindingDraft, Profile, ScanContext
 from app.models import Endpoint, Finding, Scan
 
 logger = logging.getLogger("argus.engine")
@@ -102,8 +103,9 @@ async def execute_scan(db: Session, scan_id: str) -> None:
             rate_limit_rps=float(config.get("rate_limit_rps") or 5),
             concurrency=int(config.get("concurrency") or 4),
         )
-        resolved = []
-        warnings = ["Target profiles are not resolved yet."]
+        resolved, warnings = await resolve_profiles(
+            client, [Profile.from_dict(item) for item in (scan.auth_profiles or [])]
+        )
         config["warnings"] = warnings
         scan.config = config
         flag_modified(scan, "config")
