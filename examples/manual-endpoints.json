@@ -1,0 +1,10 @@
+[
+  {
+    "method": "GET",
+    "path": "/api/orders/{order_id}",
+    "auth_required": true,
+    "parameters": [
+      {"name": "order_id", "in": "path", "schema_type": "string", "required": true}
+    ]
+  }
+]
