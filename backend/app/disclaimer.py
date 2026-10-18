@@ -17,6 +17,12 @@ CHECK_CATALOG = [
         "summary": "Checks weak secrets, unsigned tokens, ignored expiry, and forged role claims.",
     },
     {
+        "id": "data_exposure",
+        "title": "Excessive data exposure",
+        "owasp": "API3:2023",
+        "summary": "Checks whether authenticated reads return sensitive properties such as password hashes or reset tokens.",
+    },
+    {
         "id": "bfla",
         "title": "BFLA",
         "owasp": "API5:2023",
@@ -33,6 +39,12 @@ CHECK_CATALOG = [
         "title": "Injection",
         "owasp": "A03:2021",
         "summary": "Looks for SQL injection, NoSQL operators, and command-like parameters, using non-destructive probes.",
+    },
+    {
+        "id": "mass_assignment",
+        "title": "Mass assignment (opt-in)",
+        "owasp": "API3:2023",
+        "summary": "Opt-in and state-changing: flips a privileged property via PATCH/PUT on an object it can read back, then restores it. Off by default.",
     },
 ]
 
